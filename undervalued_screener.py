@@ -14,18 +14,78 @@ Usage:
 
 import os
 import sys
+import json
 import smtplib
 import requests
 import anthropic
 import yfinance as yf
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from email.message import EmailMessage
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"}
 
-# How many top candidates to send to Claude for the writeup
-TOP_N = 15
+# How many stocks to feature each run
+TOP_N = 6
+
+# Don't repeat a stock that was featured within this many days
+REPEAT_WINDOW_DAYS = 30
+
+# File that remembers which stocks were recently featured (committed back to the repo)
+HISTORY_FILE = os.path.join(os.path.dirname(__file__), "screened_history.json")
+
+
+# ── History (avoid repeating stocks across runs) ──────────────────────────────
+
+def load_recent_tickers() -> set:
+    """Return the set of tickers featured within the last REPEAT_WINDOW_DAYS."""
+    if not os.path.exists(HISTORY_FILE):
+        return set()
+    try:
+        with open(HISTORY_FILE, "r") as f:
+            history = json.load(f)
+    except Exception:
+        return set()
+
+    cutoff = datetime.now() - timedelta(days=REPEAT_WINDOW_DAYS)
+    recent = set()
+    for entry in history:
+        try:
+            seen_date = datetime.strptime(entry["date"], "%Y-%m-%d")
+            if seen_date >= cutoff:
+                recent.add(entry["ticker"])
+        except Exception:
+            continue
+    return recent
+
+
+def record_featured(tickers: list):
+    """Append today's featured tickers to history and prune old entries."""
+    history = []
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r") as f:
+                history = json.load(f)
+        except Exception:
+            history = []
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    for t in tickers:
+        history.append({"ticker": t, "date": today})
+
+    # Prune anything older than the repeat window so stocks become eligible again
+    cutoff = datetime.now() - timedelta(days=REPEAT_WINDOW_DAYS)
+    pruned = []
+    for entry in history:
+        try:
+            if datetime.strptime(entry["date"], "%Y-%m-%d") >= cutoff:
+                pruned.append(entry)
+        except Exception:
+            continue
+
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(pruned, f, indent=2)
+    print("Recorded " + str(len(tickers)) + " featured tickers to history.")
 
 
 # ── Build the universe ────────────────────────────────────────────────────────
@@ -168,7 +228,7 @@ def get_report(candidates: list) -> str:
 
     today = datetime.now().strftime("%B %d, %Y")
     lines = []
-    for c in candidates[:TOP_N]:
+    for c in candidates:
         lines.append(
             c["ticker"] + " (" + c["name"] + ") | Sector: " + c["sector"]
             + " | Price: $" + str(c["price"])
@@ -179,12 +239,13 @@ def get_report(candidates: list) -> str:
     prompt = (
         "You are a value investing analyst helping a beginner investor. Today is " + today + ".\n\n"
         "I screened the S&P 500 and Nasdaq 100 for undervalued stocks using value metrics, "
-        "cash flow, and growth-at-a-reasonable-price. Here are the top " + str(min(TOP_N, len(candidates))) + " by signal strength:\n\n"
+        "cash flow, and growth-at-a-reasonable-price. Here are " + str(len(candidates)) + " fresh names "
+        "(stocks featured in the last " + str(REPEAT_WINDOW_DAYS) + " days are excluded so you keep learning new ones):\n\n"
         + candidates_str
-        + "\n\nWrite a beginner-friendly report with these sections:\n\n"
-        "1. Top 5 Picks -- for each: ticker, company, why it screened as undervalued (plain English), "
-        "and one risk to be aware of\n"
-        "2. Sector Patterns -- are undervalued names clustering in any sector? What might that signal?\n"
+        + "\n\nWrite a beginner-friendly report covering ALL " + str(len(candidates)) + " stocks above:\n\n"
+        "1. The Picks -- for EACH stock: ticker, company, what it does, why it screened as undervalued "
+        "(plain English), and one risk to be aware of\n"
+        "2. Sector Patterns -- are these names clustering in any sector? What might that signal?\n"
         "3. A Beginner's Caution -- explain that 'undervalued' on paper doesn't always mean a good buy "
         "(value traps), and what to check before buying\n"
         "4. One to Research First -- pick the single most interesting name and say why it's worth a deeper look\n\n"
@@ -257,26 +318,41 @@ def run():
         sys.exit(1)
 
     candidates = scan_universe(universe)
-    print("\n  Found " + str(len(candidates)) + " stocks with undervaluation signals\n")
+    print("\n  Found " + str(len(candidates)) + " stocks with undervaluation signals")
 
     if not candidates:
         print("No undervalued candidates found today.")
         return
 
-    print("Top candidates:")
-    for c in candidates[:TOP_N]:
+    # Exclude stocks featured recently so each run teaches new names
+    recent = load_recent_tickers()
+    fresh = [c for c in candidates if c["ticker"] not in recent]
+    print("  " + str(len(recent)) + " excluded as recently featured; " + str(len(fresh)) + " fresh candidates")
+
+    if not fresh:
+        print("All strong candidates were featured recently. Try again after the window resets.")
+        return
+
+    # Take the top N fresh names by signal strength
+    selected = fresh[:TOP_N]
+
+    print("\nThis run's picks:")
+    for c in selected:
         print("  [" + str(c["score"]) + "] " + c["ticker"] + " -- " + ", ".join(c["reasons"]))
 
     print("\nAsking Claude for analysis (streaming)...\n")
     print("=" * 60 + "\n")
-    report = get_report(candidates)
+    report = get_report(selected)
 
     print("\n\n" + "=" * 60)
     print("  Report generated by claude-opus-4-8")
     print("=" * 60 + "\n")
 
+    # Remember these so they aren't repeated next run
+    record_featured([c["ticker"] for c in selected])
+
     if send_to_email:
-        send_email(report, len(candidates))
+        send_email(report, len(selected))
 
 
 if __name__ == "__main__":
