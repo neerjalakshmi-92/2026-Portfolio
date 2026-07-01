@@ -2,7 +2,7 @@ name: Daily Undervalued Screener
 
 on:
   schedule:
-    - cron: '37 10 * * 1,4'  # ~6:37am ET Mondays & Thursdays
+    - cron: '37 4 * * 1,4'  # 04:37 UTC Mon & Thu; early to absorb GitHub's delay for morning ET delivery
   workflow_dispatch:
 
 permissions:
