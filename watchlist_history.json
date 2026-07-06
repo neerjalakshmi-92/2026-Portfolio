@@ -22,5 +22,29 @@
   {
     "ticker": "XOM",
     "date": "2026-07-06"
+  },
+  {
+    "ticker": "NVDA",
+    "date": "2026-07-06"
+  },
+  {
+    "ticker": "V",
+    "date": "2026-07-06"
+  },
+  {
+    "ticker": "AMZN",
+    "date": "2026-07-06"
+  },
+  {
+    "ticker": "GOLD",
+    "date": "2026-07-06"
+  },
+  {
+    "ticker": "ANET",
+    "date": "2026-07-06"
+  },
+  {
+    "ticker": "HON",
+    "date": "2026-07-06"
   }
 ]
