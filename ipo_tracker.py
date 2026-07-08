@@ -15,17 +15,91 @@ Usage:
 
 import os
 import sys
+import json
 import smtplib
 import requests
 import anthropic
 from datetime import datetime, timedelta
 from email.message import EmailMessage
-from fetch_stock_data import fetch_stock_data
-
 EDGAR_HEADERS = {"User-Agent": "InvestmentAgents neerja.lakshmi@gmail.com"}
 
-# ETFs and tickers that carry IPO-related news
-IPO_NEWS_TICKERS = ["IPO", "IPOS", "SPY", "QQQ"]
+# NewsAPI search queries for fresh IPO coverage
+NEWSAPI_QUERIES = [
+    "IPO",
+    "initial public offering",
+    "files to go public",
+    "IPO pricing",
+    "stock market debut",
+]
+
+# How many days of news each report should cover (runs Mon/Thu/Sat)
+NEWS_LOOKBACK_DAYS = 4
+
+# Remember companies covered within this many days to avoid repeating info
+REPEAT_WINDOW_DAYS = 21
+
+# File that remembers recently covered companies (committed back to the repo)
+HISTORY_FILE = os.path.join(os.path.dirname(__file__), "ipo_history.json")
+
+
+# ── History (avoid repeating the same IPO info) ───────────────────────────────
+
+def load_recent_companies() -> list:
+    """Return company names covered within the last REPEAT_WINDOW_DAYS."""
+    if not os.path.exists(HISTORY_FILE):
+        return []
+    try:
+        with open(HISTORY_FILE, "r") as f:
+            history = json.load(f)
+    except Exception:
+        return []
+
+    cutoff = datetime.now() - timedelta(days=REPEAT_WINDOW_DAYS)
+    recent = []
+    for entry in history:
+        try:
+            if datetime.strptime(entry["date"], "%Y-%m-%d") >= cutoff:
+                recent.append(entry["company"])
+        except Exception:
+            continue
+    return recent
+
+
+def record_covered(companies: list):
+    """Append today's covered companies to history and prune old entries."""
+    history = []
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r") as f:
+                history = json.load(f)
+        except Exception:
+            history = []
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    for c in companies:
+        history.append({"company": c, "date": today})
+
+    cutoff = datetime.now() - timedelta(days=REPEAT_WINDOW_DAYS)
+    pruned = []
+    for entry in history:
+        try:
+            if datetime.strptime(entry["date"], "%Y-%m-%d") >= cutoff:
+                pruned.append(entry)
+        except Exception:
+            continue
+
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(pruned, f, indent=2)
+    print("Recorded " + str(len(companies)) + " covered companies to history.")
+
+
+def parse_covered(report: str) -> list:
+    """Extract company names from the 'COVERED:' line Claude adds at the top."""
+    for line in report.splitlines():
+        if line.strip().upper().startswith("COVERED:"):
+            raw = line.split(":", 1)[1]
+            return [c.strip() for c in raw.split(";") if c.strip()]
+    return []
 
 
 # ── SEC EDGAR S-1 Filings ─────────────────────────────────────────────────────
@@ -95,26 +169,49 @@ def get_recent_s1_filings(days_back: int = 14) -> list:
 # ── IPO News ──────────────────────────────────────────────────────────────────
 
 def get_ipo_news() -> list:
-    """Pull IPO-related headlines from ETFs and market trackers."""
-    all_headlines = []
-    for ticker in IPO_NEWS_TICKERS:
+    """Pull fresh IPO-related headlines directly from NewsAPI."""
+    news_api_key = os.environ.get("NEWS_API_KEY")
+    if not news_api_key:
+        print("  NEWS_API_KEY not set -- skipping NewsAPI.")
+        return []
+
+    print("Searching NewsAPI for IPO news...")
+    seen = set()
+    headlines = []
+    from_date = (datetime.now() - timedelta(days=NEWS_LOOKBACK_DAYS)).strftime("%Y-%m-%d")
+
+    for query in NEWSAPI_QUERIES:
         try:
-            data = fetch_stock_data(ticker)
-            for article in data["news"][:3]:
-                title_lower = article["title"].lower()
-                # Only keep headlines that mention IPO-related terms
-                if any(word in title_lower for word in ["ipo", "public", "listing", "offering", "s-1", "debut", "spac"]):
-                    all_headlines.append(
-                        "[" + ticker + "] " + article["title"] + " (" + article["source"] + ", " + article["date"] + ")"
-                    )
+            resp = requests.get(
+                "https://newsapi.org/v2/everything",
+                params={
+                    "q": query,
+                    "language": "en",
+                    "sortBy": "publishedAt",
+                    "pageSize": 15,
+                    "from": from_date,
+                },
+                headers={"X-Api-Key": news_api_key},
+                timeout=10,
+            )
+            resp.raise_for_status()
+            for article in resp.json().get("articles", []):
+                title = article.get("title", "")
+                source = article.get("source", {}).get("name", "Unknown")
+                published = article.get("publishedAt", "")[:10]
+                if title and title not in seen:
+                    seen.add(title)
+                    headlines.append(title + " (" + source + ", " + published + ")")
+            print("  \"" + query + "\" scanned")
         except Exception as e:
-            print("  " + ticker + " news skipped: " + str(e))
-    return all_headlines
+            print("  \"" + query + "\" failed: " + str(e))
+
+    return headlines
 
 
 # ── Claude Synthesis ──────────────────────────────────────────────────────────
 
-def get_ipo_report(filings: list, headlines: list) -> str:
+def get_ipo_report(filings: list, headlines: list, recent_companies: list) -> str:
     """Ask Claude to synthesize S-1 filings and news into a clean IPO report."""
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
@@ -138,22 +235,46 @@ def get_ipo_report(filings: list, headlines: list) -> str:
     else:
         headlines_str = "No IPO-related headlines found today."
 
+    # Companies already covered recently
+    already_str = ""
+    if recent_companies:
+        already_str = (
+            "\n\nALREADY COVERED RECENTLY (do NOT re-introduce these from scratch -- only mention one "
+            "if there is a GENUINELY NEW development since last time, e.g. it priced, set a date, or "
+            "withdrew; otherwise skip it and prioritize NEW companies):\n"
+            + "; ".join(sorted(set(recent_companies))) + "\n"
+        )
+
     prompt = (
         "You are an IPO analyst covering all industries globally. Today is " + today + ".\n\n"
-        "## Recent SEC S-1 Filings (companies registering to go public)\n"
+        "CRITICAL RULES:\n"
+        "- Base your report ONLY on the SEC filings and news headlines provided below, plus the current date. "
+        "Do NOT rely on your training data for IPO status -- it may be outdated.\n"
+        "- Do NOT list any company that has ALREADY completed its IPO and is now publicly trading "
+        "as 'upcoming' or 'rumored'. If a company already went public, it is done -- only mention it as "
+        "historical context if directly relevant, never as a future opportunity.\n"
+        "- Only treat a company as 'upcoming' or 'rumored' if the provided data actually supports that it is "
+        "still private or pending as of " + today + ".\n"
+        + already_str +
+        "\n## Recent SEC S-1 Filings (companies registering to go public)\n"
         + filings_str
-        + "\n\n## IPO-Related News Headlines\n"
+        + "\n\n## Recent IPO-Related News Headlines (last few days)\n"
         + headlines_str
-        + "\n\nWrite a structured IPO Intelligence Report with these sections:\n\n"
+        + "\n\nFIRST, output a single line listing every company you feature in this report, in EXACTLY "
+        "this format (used by software; separate names with semicolons):\n"
+        "COVERED: Company One; Company Two; Company Three\n\n"
+        "THEN write a structured IPO Intelligence Report with these sections:\n\n"
         "1. Confirmed Pipeline (companies with active S-1 filings -- who they are, what they do, which industry)\n"
-        "2. Upcoming to Watch (filings or news suggesting imminent pricing or debut in the next 30 days)\n"
-        "3. Rumored Candidates (companies mentioned in news as potential IPO candidates -- include industry and why they might go public)\n"
-        "4. Market Conditions for IPOs (is the current environment favorable for new listings? Why or why not?)\n"
-        "5. One IPO to Learn About (pick the most interesting company from the list and give a 3-4 sentence explainer for a beginner investor)\n\n"
+        "2. Upcoming to Watch (still-private companies with news suggesting imminent pricing or debut soon)\n"
+        "3. Rumored Candidates (still-private companies mentioned as potential future IPOs -- industry and why)\n"
+        "4. Recently Completed IPOs (companies from the news that JUST went public -- how the debut went)\n"
+        "5. Market Conditions for IPOs (is the current environment favorable for new listings? Why or why not?)\n"
+        "6. One IPO to Learn About (pick the most interesting STILL-PRIVATE company and give a 3-4 sentence "
+        "beginner explainer)\n\n"
         "Cover all industries -- tech, biotech, consumer, energy, finance, space, everything. "
         "Be specific with company names where the data supports it. "
         "Keep it beginner-friendly -- explain any jargon. "
-        "Do not add disclaimers or closing notes after section 5."
+        "Do not add disclaimers or closing notes after section 6."
     )
 
     client = anthropic.Anthropic(api_key=api_key)
@@ -183,7 +304,12 @@ def send_email(report: str, filing_count: int):
         return
 
     gmail_password = gmail_password.replace("\xa0", " ").strip()
-    clean_report = report.encode("ascii", errors="replace").decode("ascii")
+    # Strip the machine-readable COVERED line from the emailed version
+    visible = "\n".join(
+        line for line in report.splitlines()
+        if not line.strip().upper().startswith("COVERED:")
+    ).strip()
+    clean_report = visible.encode("ascii", errors="replace").decode("ascii")
     date_str = datetime.now().strftime("%B %d, %Y")
 
     body = (
@@ -225,14 +351,24 @@ def run():
     headlines = get_ipo_news()
     print("  Found " + str(len(headlines)) + " relevant headlines\n")
 
+    recent = load_recent_companies()
+    print("  " + str(len(recent)) + " companies covered recently (will avoid repeating)\n")
+
     print("Asking Claude for IPO analysis (streaming)...\n")
     print("=" * 60 + "\n")
 
-    report = get_ipo_report(filings, headlines)
+    report = get_ipo_report(filings, headlines, recent)
 
     print("\n\n" + "=" * 60)
     print("  Report generated by claude-opus-4-8")
     print("=" * 60 + "\n")
+
+    # Remember which companies were covered so they aren't repeated
+    covered = parse_covered(report)
+    if covered:
+        record_covered(covered)
+    else:
+        print("Warning: could not parse covered companies -- history not updated.")
 
     if send_to_email:
         send_email(report, len(filings))
