@@ -70,5 +70,29 @@
   {
     "ticker": "ETN",
     "date": "2026-07-08"
+  },
+  {
+    "ticker": "COP",
+    "date": "2026-07-13"
+  },
+  {
+    "ticker": "AAPL",
+    "date": "2026-07-13"
+  },
+  {
+    "ticker": "GS",
+    "date": "2026-07-13"
+  },
+  {
+    "ticker": "LMT",
+    "date": "2026-07-13"
+  },
+  {
+    "ticker": "HD",
+    "date": "2026-07-13"
+  },
+  {
+    "ticker": "ISRG",
+    "date": "2026-07-13"
   }
 ]
