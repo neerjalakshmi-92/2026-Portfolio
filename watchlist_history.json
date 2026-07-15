@@ -94,5 +94,29 @@
   {
     "ticker": "ISRG",
     "date": "2026-07-13"
+  },
+  {
+    "ticker": "ORCL",
+    "date": "2026-07-15"
+  },
+  {
+    "ticker": "ASML",
+    "date": "2026-07-15"
+  },
+  {
+    "ticker": "C",
+    "date": "2026-07-15"
+  },
+  {
+    "ticker": "JNJ",
+    "date": "2026-07-15"
+  },
+  {
+    "ticker": "CASY",
+    "date": "2026-07-15"
+  },
+  {
+    "ticker": "NOK",
+    "date": "2026-07-15"
   }
 ]
