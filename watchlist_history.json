@@ -118,5 +118,29 @@
   {
     "ticker": "NOK",
     "date": "2026-07-15"
+  },
+  {
+    "ticker": "PANW",
+    "date": "2026-07-20"
+  },
+  {
+    "ticker": "FNV",
+    "date": "2026-07-20"
+  },
+  {
+    "ticker": "SLB",
+    "date": "2026-07-20"
+  },
+  {
+    "ticker": "BRK.B",
+    "date": "2026-07-20"
+  },
+  {
+    "ticker": "MCD",
+    "date": "2026-07-20"
+  },
+  {
+    "ticker": "MRK",
+    "date": "2026-07-20"
   }
 ]
