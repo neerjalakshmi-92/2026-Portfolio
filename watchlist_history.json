@@ -142,5 +142,29 @@
   {
     "ticker": "MRK",
     "date": "2026-07-20"
+  },
+  {
+    "ticker": "AMD",
+    "date": "2026-07-22"
+  },
+  {
+    "ticker": "WFC",
+    "date": "2026-07-22"
+  },
+  {
+    "ticker": "AEM",
+    "date": "2026-07-22"
+  },
+  {
+    "ticker": "VRT",
+    "date": "2026-07-22"
+  },
+  {
+    "ticker": "KMI",
+    "date": "2026-07-22"
+  },
+  {
+    "ticker": "ABT",
+    "date": "2026-07-22"
   }
 ]
