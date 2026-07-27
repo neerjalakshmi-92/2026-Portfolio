@@ -166,5 +166,29 @@
   {
     "ticker": "ABT",
     "date": "2026-07-22"
+  },
+  {
+    "ticker": "GOOGL",
+    "date": "2026-07-27"
+  },
+  {
+    "ticker": "MS",
+    "date": "2026-07-27"
+  },
+  {
+    "ticker": "UNH",
+    "date": "2026-07-27"
+  },
+  {
+    "ticker": "NEE",
+    "date": "2026-07-27"
+  },
+  {
+    "ticker": "VLO",
+    "date": "2026-07-27"
+  },
+  {
+    "ticker": "ADBE",
+    "date": "2026-07-27"
   }
 ]
