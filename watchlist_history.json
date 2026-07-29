@@ -190,5 +190,29 @@
   {
     "ticker": "ADBE",
     "date": "2026-07-27"
+  },
+  {
+    "ticker": "KO",
+    "date": "2026-07-29"
+  },
+  {
+    "ticker": "SHW",
+    "date": "2026-07-29"
+  },
+  {
+    "ticker": "BAC",
+    "date": "2026-07-29"
+  },
+  {
+    "ticker": "PFE",
+    "date": "2026-07-29"
+  },
+  {
+    "ticker": "SBUX",
+    "date": "2026-07-29"
+  },
+  {
+    "ticker": "PGR",
+    "date": "2026-07-29"
   }
 ]
