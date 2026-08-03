@@ -214,5 +214,29 @@
   {
     "ticker": "PGR",
     "date": "2026-07-29"
+  },
+  {
+    "ticker": "CCJ",
+    "date": "2026-08-03"
+  },
+  {
+    "ticker": "NKE",
+    "date": "2026-08-03"
+  },
+  {
+    "ticker": "GE",
+    "date": "2026-08-03"
+  },
+  {
+    "ticker": "EOG",
+    "date": "2026-08-03"
+  },
+  {
+    "ticker": "SCHW",
+    "date": "2026-08-03"
+  },
+  {
+    "ticker": "GILD",
+    "date": "2026-08-03"
   }
 ]
