@@ -1,53 +1,5 @@
 [
   {
-    "ticker": "MU",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "SNDK",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "JPM",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "NEM",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "CAT",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "XOM",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "NVDA",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "V",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "AMZN",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "GOLD",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "ANET",
-    "date": "2026-07-06"
-  },
-  {
-    "ticker": "HON",
-    "date": "2026-07-06"
-  },
-  {
     "ticker": "CVX",
     "date": "2026-07-08"
   },
@@ -238,5 +190,29 @@
   {
     "ticker": "GILD",
     "date": "2026-08-03"
+  },
+  {
+    "ticker": "PLTR",
+    "date": "2026-08-05"
+  },
+  {
+    "ticker": "JPM",
+    "date": "2026-08-05"
+  },
+  {
+    "ticker": "CMG",
+    "date": "2026-08-05"
+  },
+  {
+    "ticker": "MRNA",
+    "date": "2026-08-05"
+  },
+  {
+    "ticker": "HON",
+    "date": "2026-08-05"
+  },
+  {
+    "ticker": "NEM",
+    "date": "2026-08-05"
   }
 ]
