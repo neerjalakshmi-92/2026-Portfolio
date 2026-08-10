@@ -1,49 +1,5 @@
 [
   {
-    "company": "Moonshot AI",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "Zhongji Innolight",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "Cube Highways Trust InvIT",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "Indo MIM",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "Prism",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "Shein",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "Zepto",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "SpaceX",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "Circle Internet Group",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "SK Hynix",
-    "date": "2026-07-20"
-  },
-  {
-    "company": "Black Rock Coffee Bar",
-    "date": "2026-07-20"
-  },
-  {
     "company": "VARSAL Tech",
     "date": "2026-07-23"
   },
@@ -530,5 +486,33 @@
   {
     "company": "Fusion Klassroom Edutech",
     "date": "2026-08-08"
+  },
+  {
+    "company": "Dhoot Transmission",
+    "date": "2026-08-10"
+  },
+  {
+    "company": "Q&T Foods",
+    "date": "2026-08-10"
+  },
+  {
+    "company": "Danneskjold and Galt Acquisition",
+    "date": "2026-08-10"
+  },
+  {
+    "company": "OceanLight Acquisition Corporation",
+    "date": "2026-08-10"
+  },
+  {
+    "company": "NASN Intelligent Tech",
+    "date": "2026-08-10"
+  },
+  {
+    "company": "Braveheart Bio",
+    "date": "2026-08-10"
+  },
+  {
+    "company": "SpaceX",
+    "date": "2026-08-10"
   }
 ]
