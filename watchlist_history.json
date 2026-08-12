@@ -1,29 +1,5 @@
 [
   {
-    "ticker": "COP",
-    "date": "2026-07-13"
-  },
-  {
-    "ticker": "AAPL",
-    "date": "2026-07-13"
-  },
-  {
-    "ticker": "GS",
-    "date": "2026-07-13"
-  },
-  {
-    "ticker": "LMT",
-    "date": "2026-07-13"
-  },
-  {
-    "ticker": "HD",
-    "date": "2026-07-13"
-  },
-  {
-    "ticker": "ISRG",
-    "date": "2026-07-13"
-  },
-  {
     "ticker": "ORCL",
     "date": "2026-07-15"
   },
@@ -214,5 +190,29 @@
   {
     "ticker": "V",
     "date": "2026-08-10"
+  },
+  {
+    "ticker": "XOM",
+    "date": "2026-08-12"
+  },
+  {
+    "ticker": "HD",
+    "date": "2026-08-12"
+  },
+  {
+    "ticker": "CAT",
+    "date": "2026-08-12"
+  },
+  {
+    "ticker": "DHR",
+    "date": "2026-08-12"
+  },
+  {
+    "ticker": "AVGO",
+    "date": "2026-08-12"
+  },
+  {
+    "ticker": "COST",
+    "date": "2026-08-12"
   }
 ]
