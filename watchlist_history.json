@@ -1,29 +1,5 @@
 [
   {
-    "ticker": "ORCL",
-    "date": "2026-07-15"
-  },
-  {
-    "ticker": "ASML",
-    "date": "2026-07-15"
-  },
-  {
-    "ticker": "C",
-    "date": "2026-07-15"
-  },
-  {
-    "ticker": "JNJ",
-    "date": "2026-07-15"
-  },
-  {
-    "ticker": "CASY",
-    "date": "2026-07-15"
-  },
-  {
-    "ticker": "NOK",
-    "date": "2026-07-15"
-  },
-  {
     "ticker": "PANW",
     "date": "2026-07-20"
   },
@@ -214,5 +190,29 @@
   {
     "ticker": "COST",
     "date": "2026-08-12"
+  },
+  {
+    "ticker": "OTIS",
+    "date": "2026-08-17"
+  },
+  {
+    "ticker": "DXCM",
+    "date": "2026-08-17"
+  },
+  {
+    "ticker": "COP",
+    "date": "2026-08-17"
+  },
+  {
+    "ticker": "KGC",
+    "date": "2026-08-17"
+  },
+  {
+    "ticker": "GS",
+    "date": "2026-08-17"
+  },
+  {
+    "ticker": "CRM",
+    "date": "2026-08-17"
   }
 ]
