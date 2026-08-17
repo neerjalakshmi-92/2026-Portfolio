@@ -1,45 +1,5 @@
 [
   {
-    "company": "Scribe Therapeutics",
-    "date": "2026-07-27"
-  },
-  {
-    "company": "Cadillac Mines Corporation",
-    "date": "2026-07-27"
-  },
-  {
-    "company": "Zepto",
-    "date": "2026-07-27"
-  },
-  {
-    "company": "Indo MIM",
-    "date": "2026-07-27"
-  },
-  {
-    "company": "CXMT",
-    "date": "2026-07-27"
-  },
-  {
-    "company": "SpaceX",
-    "date": "2026-07-27"
-  },
-  {
-    "company": "Shein",
-    "date": "2026-07-27"
-  },
-  {
-    "company": "DeepSeek",
-    "date": "2026-07-27"
-  },
-  {
-    "company": "Reformation",
-    "date": "2026-07-27"
-  },
-  {
-    "company": "Jersey Mike's Subs",
-    "date": "2026-07-27"
-  },
-  {
     "company": "IMC Rare Earths",
     "date": "2026-07-30"
   },
@@ -466,5 +426,37 @@
   {
     "company": "Behari Lal Engineering",
     "date": "2026-08-15"
+  },
+  {
+    "company": "SB Energy",
+    "date": "2026-08-17"
+  },
+  {
+    "company": "Polymarket",
+    "date": "2026-08-17"
+  },
+  {
+    "company": "Databricks",
+    "date": "2026-08-17"
+  },
+  {
+    "company": "Turtlemint",
+    "date": "2026-08-17"
+  },
+  {
+    "company": "Shiprocket",
+    "date": "2026-08-17"
+  },
+  {
+    "company": "SpaceX",
+    "date": "2026-08-17"
+  },
+  {
+    "company": "Anthropic",
+    "date": "2026-08-17"
+  },
+  {
+    "company": "OpenAI",
+    "date": "2026-08-17"
   }
 ]
