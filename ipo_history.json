@@ -1,73 +1,5 @@
 [
   {
-    "company": "BioVie",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Moleculin Biotech",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Attovia Therapeutics",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Braveheart Bio",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Vogenx",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Neuro Spectrum Insights",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "GridAI Technologies",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Flash Sports & Media Holdings",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Bitwise NEAR ETF",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Powerdyne International",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Dune Acquisition Corp III",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "AfterNext Acquisition I Corp",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Apnimed",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Jersey Mike's Subs",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Reformation",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "CXMT",
-    "date": "2026-08-01"
-  },
-  {
-    "company": "Indo-MIM",
-    "date": "2026-08-01"
-  },
-  {
     "company": "Verde Resources",
     "date": "2026-08-06"
   },
@@ -502,5 +434,73 @@
   {
     "company": "SpaceX",
     "date": "2026-08-20"
+  },
+  {
+    "company": "BayFirst Financial Corp.",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Dune Acquisition Corp III",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Little West Holdings Inc.",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Three Lions Acquisition Corp.",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Splash Beverage Group",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Non Invasive Monitoring Systems Inc.",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "BioVie Inc.",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Augmont Enterprises",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Lumino Industries",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Atomberg Technologies",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Anthropic",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "OpenAI",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Unitree",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Shiprocket",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Skytech Infinite Platform",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Technocrats Plasma Systems",
+    "date": "2026-08-22"
+  },
+  {
+    "company": "Sunshine Pictures",
+    "date": "2026-08-22"
   }
 ]
